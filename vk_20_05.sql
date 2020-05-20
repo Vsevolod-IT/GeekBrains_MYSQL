@@ -50,7 +50,10 @@ DROP TABLE IF EXISTS `communities_users`;
 CREATE TABLE `communities_users` (
   `community_id` int unsigned NOT NULL,
   `user_id` int unsigned NOT NULL,
-  PRIMARY KEY (`community_id`,`user_id`)
+  PRIMARY KEY (`community_id`,`user_id`),
+  KEY `user_community_id_fk` (`user_id`),
+  CONSTRAINT `communities_id_fk` FOREIGN KEY (`community_id`) REFERENCES `communities` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `user_community_id_fk` FOREIGN KEY (`user_id`) REFERENCES `profiles` (`user_id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -60,7 +63,7 @@ CREATE TABLE `communities_users` (
 
 LOCK TABLES `communities_users` WRITE;
 /*!40000 ALTER TABLE `communities_users` DISABLE KEYS */;
-INSERT INTO `communities_users` VALUES (1,1),(1,18),(1,28),(1,52),(1,66),(1,67),(2,25),(2,36),(2,64),(2,65),(2,68),(3,29),(3,39),(3,49),(3,53),(3,63),(3,70),(3,85),(4,9),(4,62),(5,2),(5,92),(6,81),(6,82),(6,88),(6,93),(6,96),(7,69),(7,73),(8,32),(8,38),(8,44),(9,42),(9,54),(10,56),(10,57),(11,46),(11,89),(11,90),(11,95),(11,98),(12,30),(12,83),(12,86),(13,37),(13,55),(13,72),(13,79),(14,19),(14,24),(15,21),(15,40),(15,47),(15,48),(15,59),(15,99),(16,15),(16,20),(16,41),(16,76),(16,94),(17,6),(17,8),(17,10),(17,27),(18,51),(18,74),(18,84),(18,100),(19,7),(19,12),(19,16),(19,33),(19,58),(19,60),(19,75),(20,13),(20,26),(20,50),(20,71),(21,14),(21,34),(21,97),(22,3),(22,17),(22,23),(22,43),(22,45),(22,61),(22,78),(23,22),(23,35),(23,91),(24,11),(24,31),(24,77),(24,80),(24,87);
+INSERT INTO `communities_users` VALUES (1,1),(5,2),(22,3),(17,6),(19,7),(17,8),(4,9),(17,10),(24,11),(19,12),(20,13),(21,14),(16,15),(19,16),(22,17),(1,18),(14,19),(16,20),(15,21),(23,22),(22,23),(14,24),(2,25),(20,26),(17,27),(1,28),(3,29),(12,30),(24,31),(8,32),(19,33),(21,34),(23,35),(2,36),(13,37),(8,38),(3,39),(15,40),(16,41),(9,42),(22,43),(8,44),(22,45),(11,46),(15,47),(15,48),(3,49),(20,50),(18,51),(1,52),(3,53),(9,54),(13,55),(10,56),(10,57),(19,58),(15,59),(19,60),(22,61),(4,62),(3,63),(2,64),(2,65),(1,66),(1,67),(2,68),(7,69),(3,70),(20,71),(13,72),(7,73),(18,74),(19,75),(16,76),(24,77),(22,78),(13,79),(24,80),(6,81),(6,82),(12,83),(18,84),(3,85),(12,86),(24,87),(6,88),(11,89),(11,90),(23,91),(5,92),(6,93),(16,94),(11,95),(6,96),(21,97),(11,98),(15,99),(18,100);
 /*!40000 ALTER TABLE `communities_users` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -77,7 +80,10 @@ CREATE TABLE `friendship` (
   `status_id` int unsigned NOT NULL,
   `requested_at` datetime DEFAULT CURRENT_TIMESTAMP,
   `confirmed_at` datetime DEFAULT NULL,
-  PRIMARY KEY (`user_id`,`friend_id`)
+  PRIMARY KEY (`user_id`,`friend_id`),
+  KEY `friendship_status_id_fk` (`status_id`),
+  CONSTRAINT `friendship_status_id_fk` FOREIGN KEY (`status_id`) REFERENCES `friendship_statuses` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `friendship_user_id_fk` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -117,6 +123,35 @@ INSERT INTO `friendship_statuses` VALUES (2,'Confirmed'),(3,'Rejected'),(1,'Requ
 UNLOCK TABLES;
 
 --
+-- Table structure for table `likes`
+--
+
+DROP TABLE IF EXISTS `likes`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `likes` (
+  `id` int unsigned NOT NULL AUTO_INCREMENT,
+  `user_id` int unsigned NOT NULL,
+  `target_id` int unsigned NOT NULL,
+  `target_type_id` int unsigned NOT NULL,
+  `created_at` datetime DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  KEY `likes_user_id_fk` (`user_id`),
+  CONSTRAINT `likes_user_id_fk` FOREIGN KEY (`user_id`) REFERENCES `profiles` (`user_id`) ON DELETE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=101 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `likes`
+--
+
+LOCK TABLES `likes` WRITE;
+/*!40000 ALTER TABLE `likes` DISABLE KEYS */;
+INSERT INTO `likes` VALUES (1,29,59,1,'2020-05-18 15:57:08'),(2,52,41,2,'2020-05-18 15:57:08'),(3,27,82,2,'2020-05-18 15:57:08'),(4,6,38,3,'2020-05-18 15:57:08'),(5,41,91,2,'2020-05-18 15:57:08'),(6,77,93,2,'2020-05-18 15:57:08'),(7,3,6,1,'2020-05-18 15:57:08'),(8,75,18,3,'2020-05-18 15:57:08'),(9,64,29,3,'2020-05-18 15:57:08'),(10,77,26,4,'2020-05-18 15:57:08'),(11,18,92,1,'2020-05-18 15:57:08'),(12,42,1,3,'2020-05-18 15:57:08'),(13,75,48,1,'2020-05-18 15:57:08'),(14,24,77,1,'2020-05-18 15:57:08'),(15,34,28,2,'2020-05-18 15:57:08'),(16,19,73,1,'2020-05-18 15:57:08'),(17,14,48,4,'2020-05-18 15:57:08'),(18,54,69,4,'2020-05-18 15:57:08'),(19,13,13,2,'2020-05-18 15:57:08'),(20,89,68,3,'2020-05-18 15:57:08'),(21,54,55,1,'2020-05-18 15:57:08'),(22,87,2,2,'2020-05-18 15:57:08'),(23,41,56,3,'2020-05-18 15:57:08'),(24,8,74,2,'2020-05-18 15:57:08'),(25,8,99,3,'2020-05-18 15:57:08'),(26,65,7,2,'2020-05-18 15:57:08'),(27,84,95,1,'2020-05-18 15:57:08'),(28,30,79,1,'2020-05-18 15:57:08'),(29,86,14,1,'2020-05-18 15:57:08'),(30,14,34,2,'2020-05-18 15:57:08'),(31,51,63,3,'2020-05-18 15:57:08'),(32,6,51,2,'2020-05-18 15:57:08'),(33,44,100,3,'2020-05-18 15:57:08'),(34,31,56,4,'2020-05-18 15:57:08'),(35,73,100,4,'2020-05-18 15:57:08'),(36,99,53,3,'2020-05-18 15:57:08'),(37,91,43,2,'2020-05-18 15:57:08'),(38,78,64,4,'2020-05-18 15:57:08'),(39,48,75,2,'2020-05-18 15:57:08'),(40,22,20,2,'2020-05-18 15:57:08'),(41,8,41,4,'2020-05-18 15:57:08'),(42,65,92,3,'2020-05-18 15:57:08'),(43,52,61,2,'2020-05-18 15:57:08'),(44,57,41,2,'2020-05-18 15:57:08'),(45,38,93,2,'2020-05-18 15:57:08'),(46,70,100,4,'2020-05-18 15:57:08'),(47,44,55,2,'2020-05-18 15:57:08'),(48,37,65,1,'2020-05-18 15:57:08'),(49,69,6,1,'2020-05-18 15:57:08'),(50,94,3,2,'2020-05-18 15:57:08'),(51,42,20,3,'2020-05-18 15:57:08'),(52,5,4,1,'2020-05-18 15:57:08'),(53,9,31,2,'2020-05-18 15:57:08'),(54,41,26,1,'2020-05-18 15:57:08'),(55,45,11,1,'2020-05-18 15:57:08'),(56,60,44,2,'2020-05-18 15:57:08'),(57,69,23,1,'2020-05-18 15:57:08'),(58,59,80,1,'2020-05-18 15:57:08'),(59,72,92,2,'2020-05-18 15:57:08'),(60,38,59,4,'2020-05-18 15:57:08'),(61,28,96,4,'2020-05-18 15:57:08'),(62,92,72,4,'2020-05-18 15:57:08'),(63,96,31,3,'2020-05-18 15:57:08'),(64,40,98,3,'2020-05-18 15:57:08'),(65,57,75,1,'2020-05-18 15:57:08'),(66,87,26,3,'2020-05-18 15:57:08'),(67,63,11,3,'2020-05-18 15:57:08'),(68,82,19,2,'2020-05-18 15:57:08'),(69,91,5,3,'2020-05-18 15:57:08'),(70,41,50,2,'2020-05-18 15:57:08'),(71,85,45,3,'2020-05-18 15:57:08'),(72,12,52,1,'2020-05-18 15:57:08'),(73,49,81,3,'2020-05-18 15:57:08'),(74,55,94,1,'2020-05-18 15:57:08'),(75,33,58,4,'2020-05-18 15:57:08'),(76,72,94,2,'2020-05-18 15:57:08'),(77,67,86,2,'2020-05-18 15:57:08'),(78,92,66,3,'2020-05-18 15:57:08'),(79,85,52,1,'2020-05-18 15:57:08'),(80,72,44,1,'2020-05-18 15:57:08'),(81,88,28,4,'2020-05-18 15:57:08'),(82,93,39,1,'2020-05-18 15:57:08'),(83,58,44,2,'2020-05-18 15:57:08'),(84,87,3,3,'2020-05-18 15:57:08'),(85,67,68,2,'2020-05-18 15:57:08'),(86,88,23,3,'2020-05-18 15:57:08'),(87,96,17,4,'2020-05-18 15:57:08'),(88,46,32,1,'2020-05-18 15:57:08'),(89,11,91,1,'2020-05-18 15:57:08'),(90,23,56,1,'2020-05-18 15:57:08'),(91,91,20,2,'2020-05-18 15:57:08'),(92,68,60,4,'2020-05-18 15:57:08'),(93,12,64,4,'2020-05-18 15:57:08'),(94,31,100,1,'2020-05-18 15:57:08'),(95,23,3,2,'2020-05-18 15:57:08'),(96,13,30,1,'2020-05-18 15:57:08'),(97,62,77,4,'2020-05-18 15:57:08'),(98,68,40,4,'2020-05-18 15:57:08'),(99,51,73,1,'2020-05-18 15:57:08'),(100,28,13,4,'2020-05-18 15:57:08');
+/*!40000 ALTER TABLE `likes` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `media`
 --
 
@@ -132,7 +167,9 @@ CREATE TABLE `media` (
   `media_type_id` int unsigned NOT NULL,
   `created_at` datetime DEFAULT CURRENT_TIMESTAMP,
   `updated_at` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  KEY `media_type_id_fk` (`media_type_id`),
+  CONSTRAINT `media_type_id_fk` FOREIGN KEY (`media_type_id`) REFERENCES `media_types` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=101 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -186,7 +223,11 @@ CREATE TABLE `messages` (
   `is_important` tinyint(1) DEFAULT NULL,
   `is_delivered` tinyint(1) DEFAULT NULL,
   `created_at` datetime DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  KEY `message_from_user_id_fk` (`from_user_id`),
+  KEY `message_to_user_id_fk` (`to_user_id`),
+  CONSTRAINT `message_from_user_id_fk` FOREIGN KEY (`from_user_id`) REFERENCES `profiles` (`user_id`) ON DELETE CASCADE,
+  CONSTRAINT `message_to_user_id_fk` FOREIGN KEY (`to_user_id`) REFERENCES `profiles` (`user_id`) ON DELETE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=101 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -198,6 +239,42 @@ LOCK TABLES `messages` WRITE;
 /*!40000 ALTER TABLE `messages` DISABLE KEYS */;
 INSERT INTO `messages` VALUES (1,71,56,'Sint laboriosam hic iure quos inventore eos.',0,0,'2017-04-20 13:45:28'),(2,70,78,'In qui dolor sed veritatis voluptatem aliquam.',0,1,'2016-02-17 18:20:14'),(3,80,65,'Vitae rem hic quaerat.',0,0,'2010-09-23 21:54:23'),(4,87,37,'At amet sed eligendi pariatur reiciendis.',0,1,'2015-04-18 13:25:40'),(5,24,8,'In aliquam nihil vel non voluptates.',1,0,'2013-12-05 23:15:45'),(6,69,21,'Libero maiores quis sit dolores ipsum.',1,0,'2011-05-31 06:57:45'),(7,96,18,'Maxime optio eum perspiciatis.',0,1,'2018-11-15 08:59:57'),(8,1,52,'Sed dolor saepe impedit quisquam quasi labore quia.',1,1,'2012-08-20 02:00:29'),(9,54,13,'Et est beatae nulla.',0,1,'2016-04-06 02:26:32'),(10,2,71,'Accusantium pariatur facere quia qui qui molestias.',0,0,'2017-10-23 09:39:53'),(11,48,26,'Modi omnis reiciendis omnis qui in illo cumque mollitia.',0,0,'2016-04-02 05:21:49'),(12,85,46,'Repudiandae et quam aut quod est animi repellendus.',0,0,'2016-02-16 09:45:17'),(13,74,33,'Perspiciatis consequatur soluta qui.',0,0,'2014-08-01 03:24:23'),(14,42,13,'Fugiat voluptatibus corrupti provident quibusdam praesentium qui neque.',0,0,'2019-04-14 03:27:30'),(15,35,38,'Tempora laudantium illo officiis quisquam et facere sit.',0,0,'2015-10-11 19:49:09'),(16,84,7,'Rem labore asperiores inventore voluptatem.',1,0,'2011-10-18 09:30:30'),(17,82,87,'Nostrum odit suscipit cum dolore dignissimos occaecati.',1,0,'2013-06-06 17:57:24'),(18,89,85,'Fugiat dolor ullam est corporis id.',0,1,'2020-02-20 06:18:41'),(19,59,36,'Ut corrupti dolore delectus minima sapiente in eos.',0,0,'2013-02-09 04:14:10'),(20,3,5,'Harum sit provident eaque aperiam quaerat voluptas libero omnis.',0,0,'2011-11-13 07:13:38'),(21,19,77,'Fugit quibusdam non adipisci recusandae amet.',0,1,'2010-07-04 04:50:09'),(22,29,13,'Libero dolore fugiat rerum iure quo illum vel.',0,0,'2017-12-05 07:39:27'),(23,76,39,'Qui voluptas eos aut mollitia repellendus.',0,1,'2019-03-24 23:06:05'),(24,70,33,'Distinctio magni ut inventore cupiditate veniam ipsam sunt.',1,0,'2015-02-16 13:34:19'),(25,53,65,'Qui tempora illum omnis non eum.',0,1,'2016-02-14 12:35:25'),(26,65,31,'Et neque mollitia sed beatae qui ipsa.',1,1,'2018-04-17 02:36:33'),(27,59,1,'Odit quaerat voluptas dolorem vero debitis.',1,1,'2012-06-26 21:20:57'),(28,26,28,'Repellat iste ut voluptatem vel ut nulla voluptatem.',0,1,'2018-01-17 02:05:28'),(29,62,24,'Quaerat eaque vel et.',1,0,'2017-02-11 05:34:10'),(30,35,100,'Temporibus et totam ut ut quas.',1,0,'2019-12-31 17:41:49'),(31,96,78,'Quasi aut reprehenderit assumenda repellat.',1,1,'2019-09-04 03:46:23'),(32,1,72,'Omnis velit eligendi corrupti ducimus perspiciatis.',1,0,'2012-08-19 13:57:34'),(33,57,66,'Quia dolorem aut id.',0,1,'2018-11-10 01:52:55'),(34,60,3,'Laboriosam aut aut quis repudiandae est.',1,1,'2017-07-26 15:15:59'),(35,34,62,'Asperiores aut inventore cum explicabo illum occaecati at voluptas.',0,0,'2019-06-14 12:51:33'),(36,4,36,'Dolorem earum eum voluptatem laborum laudantium dicta.',0,1,'2017-06-17 07:12:09'),(37,68,30,'Dolor nihil voluptas fugit.',0,0,'2012-04-02 12:39:27'),(38,47,42,'Reprehenderit aliquid optio et ut iste assumenda.',1,1,'2016-04-16 11:49:20'),(39,69,17,'Et quam unde optio suscipit quibusdam ea vel.',1,0,'2010-07-12 08:37:48'),(40,80,47,'Impedit voluptatum animi aut voluptatibus debitis.',0,0,'2016-03-19 01:14:10'),(41,94,31,'Rerum recusandae modi ad ut.',0,0,'2010-05-16 21:01:02'),(42,72,67,'Modi fugit recusandae est quaerat natus a fugit quisquam.',1,0,'2013-07-16 05:08:09'),(43,16,81,'Ducimus illo error consequatur soluta ducimus esse ducimus distinctio.',0,1,'2013-12-30 04:31:00'),(44,57,40,'Deserunt aut praesentium aspernatur cumque cupiditate nemo neque.',1,1,'2018-02-06 11:09:28'),(45,31,31,'Dolore id ut aliquid sint.',1,0,'2020-01-18 22:10:21'),(46,64,27,'Adipisci tenetur sequi qui beatae eum magni aperiam.',0,1,'2016-11-08 00:40:04'),(47,39,17,'Et aut dolores non aut sunt dicta numquam et.',1,0,'2010-10-20 09:23:48'),(48,68,87,'Nobis enim cum nihil praesentium perferendis.',1,1,'2011-11-16 04:52:32'),(49,30,90,'Et cumque ut aut dolores et alias.',1,0,'2010-12-23 20:36:34'),(50,60,30,'Corrupti iusto quis et.',0,0,'2020-03-21 20:49:54'),(51,67,47,'Qui perspiciatis quod sed quae in sed.',1,1,'2017-03-21 12:37:20'),(52,33,21,'Qui dolorum ratione soluta et vel illum excepturi impedit.',0,1,'2018-11-22 14:37:38'),(53,8,75,'Corrupti necessitatibus vel vel dolorum repudiandae commodi vel.',0,1,'2012-10-04 08:23:11'),(54,53,39,'Eum sint aut sit id molestias.',1,0,'2014-03-15 16:54:37'),(55,33,49,'Aperiam fugiat vero ut et maiores.',1,1,'2011-12-06 22:35:18'),(56,46,83,'Ut sint aspernatur et dolore quia ullam voluptatibus.',1,1,'2013-08-26 03:25:38'),(57,78,39,'Fugiat ut porro sed ut suscipit voluptatum.',1,0,'2017-11-24 00:25:57'),(58,59,81,'Enim sed modi ut consequuntur accusamus architecto voluptatum.',0,0,'2018-07-28 23:25:38'),(59,24,79,'Quia et dolorem laboriosam eos cumque.',0,1,'2017-10-01 10:09:58'),(60,21,67,'Nesciunt error ab nesciunt dolorum.',0,0,'2018-08-21 20:20:06'),(61,71,54,'Corrupti voluptas quos consectetur ipsa in corrupti.',0,0,'2011-11-12 05:56:16'),(62,55,14,'Blanditiis deserunt aliquam sit quam.',1,0,'2018-05-13 05:01:08'),(63,3,75,'Aperiam quibusdam eum quis mollitia.',0,0,'2010-05-09 05:51:13'),(64,66,5,'Perspiciatis nihil dicta facere autem.',0,1,'2016-11-20 20:16:57'),(65,27,17,'Sit illum sed libero.',0,0,'2018-04-26 00:37:20'),(66,3,66,'Accusantium tenetur hic quas natus harum.',0,1,'2013-05-29 17:16:13'),(67,20,100,'Suscipit maxime debitis quia esse.',1,0,'2019-10-10 07:44:54'),(68,40,1,'Omnis reiciendis laboriosam dolor quia fugit culpa.',0,0,'2013-01-29 17:21:01'),(69,84,15,'Aut pariatur perspiciatis reiciendis rem temporibus.',0,0,'2010-10-21 09:43:03'),(70,24,74,'Beatae deserunt facere sit omnis aut ut ea.',1,1,'2016-08-12 17:50:40'),(71,97,64,'Quaerat perspiciatis aut possimus ut illo cumque vitae.',1,1,'2020-04-13 12:11:56'),(72,28,47,'Autem eligendi consequatur voluptas molestias voluptates.',1,1,'2015-11-01 10:10:15'),(73,49,6,'Laborum culpa est eveniet possimus dolore.',0,1,'2016-10-18 03:45:09'),(74,82,90,'Autem unde minima unde et.',1,1,'2018-03-16 16:53:59'),(75,3,46,'Amet aliquid ex harum impedit sunt.',0,0,'2015-05-26 14:10:28'),(76,20,61,'Est amet dolores consequatur enim nobis.',1,1,'2018-05-31 11:37:13'),(77,45,39,'Cumque sequi expedita ducimus sit mollitia.',1,0,'2010-05-10 06:46:07'),(78,63,97,'Omnis odit saepe quidem dicta enim dolorum.',0,0,'2014-07-17 05:53:00'),(79,97,91,'Similique qui iste et culpa similique vel debitis.',1,0,'2019-01-15 16:58:42'),(80,65,50,'Fugiat sit voluptate officiis repudiandae ut rerum.',1,0,'2018-07-03 04:28:38'),(81,57,33,'Libero vero nostrum est ea facere reiciendis.',0,1,'2014-03-05 17:37:38'),(82,92,60,'Ipsa non non qui aspernatur qui.',0,0,'2013-01-21 08:31:26'),(83,24,40,'Minus iure maiores et rerum.',1,1,'2018-02-11 01:54:47'),(84,27,15,'Eaque nisi commodi non quae sit dolor.',1,1,'2015-01-23 00:53:47'),(85,95,29,'Inventore inventore sit exercitationem accusamus rerum sunt.',0,1,'2014-09-11 06:08:17'),(86,59,10,'Labore soluta aut enim cupiditate quia ducimus non aliquam.',0,0,'2011-11-23 19:54:44'),(87,69,15,'Consequuntur aut rem iusto sed.',1,1,'2011-11-09 10:00:30'),(88,70,3,'Quod rerum hic est expedita ut dignissimos.',0,0,'2019-07-13 18:40:51'),(89,4,9,'Officiis voluptate et nesciunt rem fugiat est.',1,0,'2011-01-30 10:05:08'),(90,33,40,'Temporibus aut dolor optio fuga minima.',1,1,'2016-05-22 20:08:42'),(91,100,77,'Harum delectus in aut earum.',0,1,'2013-09-13 00:22:47'),(92,87,4,'Placeat qui ea a consequuntur.',1,1,'2018-04-26 08:12:11'),(93,57,72,'Et sequi nulla natus ea ipsum.',0,0,'2019-09-23 18:01:34'),(94,88,25,'In et ut reiciendis et quae et.',0,0,'2011-07-08 11:57:19'),(95,60,24,'Odio qui molestiae similique modi.',0,1,'2014-07-06 16:56:21'),(96,39,25,'Nam expedita distinctio dolores vero.',1,1,'2013-01-02 14:55:29'),(97,7,57,'Omnis quidem consequatur ut qui.',1,0,'2011-01-27 03:15:40'),(98,64,49,'Odit quas repellendus porro quam totam omnis magni.',1,1,'2020-01-15 14:50:39'),(99,51,10,'Quibusdam voluptas voluptas magni molestiae amet iusto cum porro.',1,0,'2018-08-26 02:25:36'),(100,95,46,'Inventore eum quasi nemo illum iste enim.',1,0,'2019-09-27 06:30:04');
 /*!40000 ALTER TABLE `messages` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `posts`
+--
+
+DROP TABLE IF EXISTS `posts`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `posts` (
+  `id` int unsigned NOT NULL AUTO_INCREMENT,
+  `user_id` int unsigned NOT NULL,
+  `community_id` int unsigned DEFAULT NULL,
+  `head` varchar(255) DEFAULT NULL,
+  `body` text NOT NULL,
+  `media_id` int unsigned DEFAULT NULL,
+  `is_public` tinyint(1) DEFAULT '1',
+  `is_archived` tinyint(1) DEFAULT '0',
+  `views_counter` int unsigned DEFAULT '0',
+  `created_at` datetime DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  KEY `post_communities_id_fk` (`community_id`),
+  KEY `post_user_id_fk` (`user_id`),
+  CONSTRAINT `post_communities_id_fk` FOREIGN KEY (`community_id`) REFERENCES `communities` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `post_user_id_fk` FOREIGN KEY (`user_id`) REFERENCES `profiles` (`user_id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `posts`
+--
+
+LOCK TABLES `posts` WRITE;
+/*!40000 ALTER TABLE `posts` DISABLE KEYS */;
+/*!40000 ALTER TABLE `posts` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -215,7 +292,10 @@ CREATE TABLE `profiles` (
   `city` varchar(130) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL,
   `country` varchar(130) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL,
   `updated_at` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  PRIMARY KEY (`user_id`)
+  PRIMARY KEY (`user_id`),
+  KEY `profiles_photo_id_fk` (`photo_id`),
+  CONSTRAINT `profiles_photo_id_fk` FOREIGN KEY (`photo_id`) REFERENCES `media` (`id`) ON DELETE SET NULL,
+  CONSTRAINT `profiles_user_id_fk` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -227,6 +307,32 @@ LOCK TABLES `profiles` WRITE;
 /*!40000 ALTER TABLE `profiles` DISABLE KEYS */;
 INSERT INTO `profiles` VALUES (1,17,'w','1986-07-07','Spencerville','Vietnam','2020-05-10 17:58:09'),(2,98,'w','2000-06-18','North Vickymouth','Slovenia','2020-05-10 17:58:09'),(3,41,'m','1981-07-28','North Fletaport','British Indian Ocean Territory (Chagos Archipelago)','2020-05-10 18:05:09'),(4,10,'w','2004-04-26','Juvenalton','Nauru','2020-05-10 17:58:09'),(5,24,'w','1994-08-11','Onamouth','Namibia','2020-05-10 17:58:09'),(6,93,'m','2019-09-27','Mannport','Cook Islands','2020-05-10 18:05:09'),(7,90,'m','1978-04-26','Octaviaborough','Aruba','2020-05-10 17:58:09'),(8,70,'m','1996-11-30','Xzavierton','Papua New Guinea','2020-05-10 18:05:09'),(9,82,'w','2003-04-18','South Ellsworthfort','Indonesia','2020-05-10 17:58:09'),(10,98,'w','1980-05-16','West Drewshire','United States of America','2020-05-10 18:05:09'),(11,42,'m','2011-01-06','Connellychester','Comoros','2020-05-10 17:58:09'),(12,16,'w','1973-12-07','Lake Colleen','Tonga','2020-05-10 17:58:09'),(13,52,'m','2008-08-18','North Jermainview','Romania','2020-05-10 17:58:09'),(14,13,'m','2008-05-21','Bodeland','Malawi','2020-05-10 17:58:09'),(15,10,'m','2007-09-26','Michelleborough','Serbia','2020-05-10 18:05:09'),(16,11,'m','1975-01-17','South Cleve','Poland','2020-05-10 18:05:09'),(17,23,'m','1977-04-22','Aidastad','Andorra','2020-05-10 18:05:09'),(18,81,'w','1985-05-20','Port Elianefort','Mauritius','2020-05-10 17:58:09'),(19,37,'w','1977-05-05','Lake Tracyland','Micronesia','2020-05-10 18:05:09'),(20,40,'w','1980-10-18','Lake Madelinemouth','Ecuador','2020-05-10 17:58:09'),(21,89,'m','2008-11-13','Port Domingoview','Moldova','2020-05-10 18:05:09'),(22,24,'m','1979-01-12','Lamontborough','French Polynesia','2020-05-10 18:05:09'),(23,52,'w','1972-12-08','Boehmhaven','United Kingdom','2020-05-10 18:05:09'),(24,89,'m','1990-10-08','Zacheryburgh','Bahrain','2020-05-10 18:05:09'),(25,89,'m','2013-04-05','Mitchellbury','Sao Tome and Principe','2020-05-10 17:58:09'),(26,79,'w','1976-07-23','Yundtton','Guatemala','2020-05-10 17:58:09'),(27,25,'m','2006-10-21','Hardyfurt','Saint Martin','2020-05-10 17:58:09'),(28,88,'m','1994-10-05','Julietton','Guatemala','2020-05-10 17:58:09'),(29,66,'m','2010-05-31','East Lloyd','Georgia','2020-05-10 17:58:09'),(30,65,'m','2012-04-07','North Kaylee','Liechtenstein','2020-05-10 17:58:09'),(31,28,'m','2007-05-07','Madonnahaven','Ecuador','2020-05-10 17:58:09'),(32,44,'w','2003-05-21','Elwinfurt','Taiwan','2020-05-10 18:05:09'),(33,35,'m','1997-07-29','New Marcelle','Gibraltar','2020-05-10 18:05:09'),(34,43,'w','1985-07-13','Rebachester','Marshall Islands','2020-05-10 18:05:09'),(35,8,'w','1989-01-28','Runolfsdottirfurt','Italy','2020-05-10 17:58:09'),(36,13,'m','1998-08-19','Mrazport','Tonga','2020-05-10 18:05:09'),(37,39,'m','1991-02-27','Jaskolskiview','Hong Kong','2020-05-10 17:58:09'),(38,56,'w','2001-01-06','Reynabury','Belarus','2020-05-10 18:05:09'),(39,62,'m','2000-06-04','East Flossiestad','Indonesia','2020-05-10 18:05:09'),(40,43,'w','1986-10-09','Port Newton','Jamaica','2020-05-10 17:58:09'),(41,30,'w','1989-07-30','Port Davionhaven','Bhutan','2020-05-10 17:58:09'),(42,17,'w','1980-07-08','Jarrellburgh','Tokelau','2020-05-10 18:05:09'),(43,95,'w','1978-11-17','Runteport','Ireland','2020-05-10 18:05:09'),(44,23,'m','1982-10-09','East Lisette','Seychelles','2020-05-10 17:58:09'),(45,29,'m','2001-11-01','Gennarochester','Dominica','2020-05-10 18:05:09'),(46,76,'w','2003-05-06','Willmsport','Nauru','2020-05-10 18:05:09'),(47,93,'w','1999-03-07','Port Frederick','Thailand','2020-05-10 18:05:09'),(48,36,'w','1998-07-23','Torpbury','Samoa','2020-05-10 18:05:09'),(49,99,'m','1978-01-24','Harveybury','Armenia','2020-05-10 17:58:09'),(50,89,'w','1989-11-24','Beattyhaven','Belize','2020-05-10 18:05:09'),(51,46,'w','1997-01-24','Merleville','Greenland','2020-05-10 18:05:09'),(52,62,'w','1981-11-12','West Brandy','Panama','2020-05-10 17:58:09'),(53,74,'w','1976-03-05','Reingerport','Iceland','2020-05-10 17:58:09'),(54,82,'m','1977-06-20','Jerdeville','Gabon','2020-05-10 18:05:09'),(55,88,'w','1977-02-08','Mauricioton','Singapore','2020-05-10 18:05:09'),(56,93,'m','1976-07-11','Charleyville','Benin','2020-05-10 17:58:09'),(57,2,'m','1984-08-04','Rolfsonfort','Faroe Islands','2020-05-10 17:58:09'),(58,29,'m','2009-01-12','Braunstad','Egypt','2020-05-10 18:05:09'),(59,39,'w','2015-07-01','Dereckstad','Turks and Caicos Islands','2020-05-10 18:05:09'),(60,7,'m','2015-03-02','Alberthastad','Bouvet Island (Bouvetoya)','2020-05-10 17:58:09'),(61,18,'m','2002-11-23','Lake Rubymouth','Grenada','2020-05-10 17:58:09'),(62,70,'m','2012-02-18','Port Louieport','Palau','2020-05-10 18:05:09'),(63,96,'m','1988-10-27','North Adolfo','Saint Kitts and Nevis','2020-05-10 17:58:09'),(64,67,'m','2010-06-16','Sabinachester','French Polynesia','2020-05-10 18:05:09'),(65,46,'m','1980-03-31','Lake Maddisonfort','Guyana','2020-05-10 18:05:09'),(66,27,'m','1979-01-09','Kristinland','Angola','2020-05-10 18:05:09'),(67,100,'w','2007-10-23','Port Ena','Greenland','2020-05-10 17:58:09'),(68,18,'m','2010-01-10','Littlemouth','Iran','2020-05-10 18:05:09'),(69,87,'w','1979-06-21','Watsicatown','Mexico','2020-05-10 17:58:09'),(70,82,'w','1987-06-20','Carterfort','Christmas Island','2020-05-10 18:05:09'),(71,50,'w','2007-02-04','Loweville','Zimbabwe','2020-05-10 17:58:09'),(72,4,'m','2020-01-13','Keaganshire','Romania','2020-05-10 17:58:09'),(73,67,'w','2013-10-04','O\'Reillyfort','Philippines','2020-05-10 17:58:09'),(74,21,'w','1972-03-06','South Patricia','Madagascar','2020-05-10 18:05:09'),(75,7,'m','2002-03-09','Abrahamfort','Burkina Faso','2020-05-10 17:58:09'),(76,72,'m','2014-11-13','New Lonnie','Dominican Republic','2020-05-10 17:58:09'),(77,36,'w','2015-07-22','Port Porter','Mayotte','2020-05-10 18:05:09'),(78,66,'w','2000-06-04','Jabarimouth','Sweden','2020-05-10 18:05:09'),(79,19,'w','1992-05-02','Bridiemouth','Chile','2020-05-10 17:58:09'),(80,97,'w','2006-11-20','Ricemouth','Montserrat','2020-05-10 18:05:09'),(81,28,'m','1978-02-06','South Myrtie','Solomon Islands','2020-05-10 17:58:09'),(82,47,'w','2016-09-30','Carrollville','Latvia','2020-05-10 17:58:09'),(83,53,'w','1991-06-04','Port Vernafort','Niger','2020-05-10 17:58:09'),(84,22,'m','1978-04-09','Brionnamouth','Portugal','2020-05-10 18:05:09'),(85,50,'w','2013-09-28','West Dannieside','Myanmar','2020-05-10 18:05:09'),(86,86,'m','1990-06-18','Stephanieburgh','Jamaica','2020-05-10 18:05:09'),(87,76,'w','1996-10-22','Lilyanchester','Chile','2020-05-10 18:05:09'),(88,24,'w','1988-04-21','Granthaven','Saint Martin','2020-05-10 18:05:09'),(89,89,'m','1996-10-09','Ezekielton','Bahamas','2020-05-10 17:58:09'),(90,72,'m','2004-01-22','Kellieborough','Grenada','2020-05-10 17:58:09'),(91,95,'m','1970-03-30','South Clarissa','Malaysia','2020-05-10 17:58:09'),(92,59,'m','2009-06-03','North Moises','Belgium','2020-05-10 18:05:09'),(93,6,'w','1989-10-17','Port Sterlingberg','Malawi','2020-05-10 17:58:09'),(94,56,'w','1979-12-09','Lake Joshuahbury','Heard Island and McDonald Islands','2020-05-10 18:05:09'),(95,61,'w','2013-09-24','East Parker','Timor-Leste','2020-05-10 18:05:09'),(96,34,'m','2017-10-11','Lake Aleen','Kiribati','2020-05-10 17:58:09'),(97,89,'w','1976-07-16','West Sincere','Marshall Islands','2020-05-10 18:05:09'),(98,40,'w','2018-04-01','South Mayra','Ecuador','2020-05-10 18:05:09'),(99,34,'m','2000-08-13','New Antonettaside','Nicaragua','2020-05-10 17:58:09'),(100,47,'w','1999-02-27','Carmelamouth','Liberia','2020-05-10 18:05:09');
 /*!40000 ALTER TABLE `profiles` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `target_types`
+--
+
+DROP TABLE IF EXISTS `target_types`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `target_types` (
+  `id` int unsigned NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) NOT NULL,
+  `created_at` datetime DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `name` (`name`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `target_types`
+--
+
+LOCK TABLES `target_types` WRITE;
+/*!40000 ALTER TABLE `target_types` DISABLE KEYS */;
+INSERT INTO `target_types` VALUES (1,'messages','2020-05-18 15:57:01'),(2,'users','2020-05-18 15:57:01'),(3,'media','2020-05-18 15:57:01'),(4,'posts','2020-05-18 15:57:01');
+/*!40000 ALTER TABLE `target_types` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -267,12 +373,14 @@ CREATE TABLE `users` (
   `last_name` varchar(100) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
   `email` varchar(100) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
   `phone` varchar(100) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
-  `status_id` int unsigned NOT NULL DEFAULT '1',
+  `status_id` int unsigned DEFAULT NULL,
   `created_at` datetime DEFAULT CURRENT_TIMESTAMP,
   `updated_at` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   UNIQUE KEY `email` (`email`),
-  UNIQUE KEY `phone` (`phone`)
+  UNIQUE KEY `phone` (`phone`),
+  KEY `users_status_id_fk` (`status_id`),
+  CONSTRAINT `users_status_id_fk` FOREIGN KEY (`status_id`) REFERENCES `user_statuses` (`id`) ON DELETE SET NULL
 ) ENGINE=InnoDB AUTO_INCREMENT=101 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -295,4 +403,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2020-05-11 20:28:04
+-- Dump completed on 2020-05-20 11:43:40
